@@ -11,16 +11,10 @@ class Report:
         self.title = title
         self.subtitle = subtitle
         self.subtitle2 = subtitle2
-    
     def outputDate(self):
-        return self.date
-
-    def outputTitle(self):
         return self.title
-
     def subTitle(self):
         return self.subtitle
-    
     def subTitle2(self):
         return self.subtitle2
 
@@ -66,6 +60,7 @@ title = tt.render(rep=report)
 subTitle = sub_date.render(rep=report)
 subTitle2 = sub_title.render(rep=report)
 subTitle3 = sub_title2.render(rep=report)
+
 
 pdf = canvas.Canvas(fileName)
 pdf.setTitle(documentTitle)
