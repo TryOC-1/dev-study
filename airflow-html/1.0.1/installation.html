@@ -1,0 +1,325 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installation &mdash; Airflow 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Concepts" href="concepts.html" />
+    <link rel="prev" title="UI / Screenshots" href="ui.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Airflow
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui.html">UI / Screenshots</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#extra-packages">Extra Packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-a-backend">Setting up a Backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#connections">Connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scaling-out">Scaling Out</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#web-authentication">Web Authentication</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="profiling.html">Data Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command Line Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.html">The Scheduler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html">Code / API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Airflow</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Installation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>Setting up the sandbox from the <a class="reference internal" href="start.html"><span class="doc">Quick Start</span></a> section was easy, now
+working towards a production grade environment is a bit more work.</p>
+<div class="section" id="extra-packages">
+<h2>Extra Packages<a class="headerlink" href="#extra-packages" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">airflow</span></code> PyPI basic package only installs what’s needed to get started.
+Subpackages can be installed depending on what will be useful in your
+environment. For instance, if you don’t need connectivity with Postgres,
+you won’t have to go through the trouble of install the <code class="docutils literal notranslate"><span class="pre">postgres-devel</span></code> yum
+package, or whatever equivalent on the distribution you are using.</p>
+<p>Behind the scene, we do conditional imports on operators that require
+these extra dependencies.</p>
+<p>Here’s the list of the subpackages and that they enable:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="41%" />
+<col width="44%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">subpackage</th>
+<th class="head">install command</th>
+<th class="head">enables</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>mysql</td>
+<td><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">airflow[mysql]</span></code></td>
+<td>MySQL operators and hook, support as
+an Airflow backend</td>
+</tr>
+<tr class="row-odd"><td>postgres</td>
+<td><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">airflow[postgres]</span></code></td>
+<td>Postgres operators and hook, support
+as an Airflow backend</td>
+</tr>
+<tr class="row-even"><td>samba</td>
+<td><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">airflow[samba]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">Hive2SambaOperator</span></code></td>
+</tr>
+<tr class="row-odd"><td>s3</td>
+<td><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">airflow[s3]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">S3KeySensor</span></code>, <code class="docutils literal notranslate"><span class="pre">S3PrefixSensor</span></code></td>
+</tr>
+<tr class="row-even"><td>all</td>
+<td><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">airflow[all]</span></code></td>
+<td>All Airflow features known to man</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="setting-up-a-backend">
+<h2>Setting up a Backend<a class="headerlink" href="#setting-up-a-backend" title="Permalink to this headline">¶</a></h2>
+<p>If you want to take a real test drive of Airflow, you should consider
+setting up a real database backend and switching to the LocalExecutor.</p>
+<p>As Airflow was built to interact with its metadata using the great SqlAlchemy
+library, you should be able to use any database backend supported as a
+SqlAlchemy backend. We recommend using <strong>MySQL</strong> or <strong>Postgres</strong>.</p>
+<p>Once you’ve setup your database to host Airflow, you’ll need to alter the
+SqlAlchemy connection string located in your configuration file
+<code class="docutils literal notranslate"><span class="pre">$AIRFLOW_HOME/airflow.cfg</span></code>. You should then also change the “executor”
+setting to use “LocalExecutor”, an executor that can parallelize task
+instances locally.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize the database</span>
+airflow initdb
+</pre></div>
+</div>
+</div>
+<div class="section" id="connections">
+<h2>Connections<a class="headerlink" href="#connections" title="Permalink to this headline">¶</a></h2>
+<p>Airflow needs to know how to connect to your environment. Information
+such as hostname, port, login and password to other systems and services is
+handled <code class="docutils literal notranslate"><span class="pre">Admin-&gt;Connection</span></code> section of the UI. The pipeline code you will
+author will reference the ‘conn_id’ of the Connection objects.</p>
+<img alt="_images/connections.png" src="_images/connections.png" />
+</div>
+<div class="section" id="scaling-out">
+<h2>Scaling Out<a class="headerlink" href="#scaling-out" title="Permalink to this headline">¶</a></h2>
+<p>CeleryExecutor is the way you can scale out the number of workers. For this
+to work, you need to setup a Celery backend (<strong>RabbitMQ</strong>, <strong>Redis</strong>, …) and
+change your <code class="docutils literal notranslate"><span class="pre">airflow.cfg</span></code> to point the executor parameter to
+CeleryExecutor and provide the related Celery settings.</p>
+<p>To kick off a worker, you need to setup Airflow and quick off the worker
+subcommand</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>airflow worker
+</pre></div>
+</div>
+<p>Your worker should start picking up tasks as soon as they get fired up in
+its direction.</p>
+<p>Note that you can also run “Celery Flower” a web UI build on top of Celery
+to monitor your workers.</p>
+</div>
+<div class="section" id="web-authentication">
+<h2>Web Authentication<a class="headerlink" href="#web-authentication" title="Permalink to this headline">¶</a></h2>
+<p>By default, all gates are opened. An easy way to restrict access
+to the web application is to do it at the network level, or by using
+ssh tunnels.</p>
+<p>However, it is possible to switch on
+authentication and define exactly how your users should login
+into your Airflow environment. Airflow uses <code class="docutils literal notranslate"><span class="pre">flask_login</span></code> and
+exposes a set of hooks in the <code class="docutils literal notranslate"><span class="pre">airflow.default_login</span></code> module. You can
+alter the content of this module by overriding it as a <code class="docutils literal notranslate"><span class="pre">airflow_login</span></code>
+module. To do this, you would typically copy/paste <code class="docutils literal notranslate"><span class="pre">airflow.default_login</span></code>
+in a <code class="docutils literal notranslate"><span class="pre">airflow_login.py</span></code> and put it directly in your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="concepts.html" class="btn btn-neutral float-right" title="Concepts" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ui.html" class="btn btn-neutral float-left" title="UI / Screenshots" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Maxime Beauchemin
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
