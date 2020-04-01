@@ -1,0 +1,1692 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Code / API &mdash; Airflow 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="The Scheduler" href="scheduler.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Airflow
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui.html">UI / Screenshots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="profiling.html">Data Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command Line Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.html">The Scheduler</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Code / API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#operators">Operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#macros">Macros</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#default-variables">Default Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Macros</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#models">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-airflow.hooks">Hooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#executors">Executors</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Airflow</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Code / API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/code.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="code-api">
+<h1>Code / API<a class="headerlink" href="#code-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="operators">
+<h2>Operators<a class="headerlink" href="#operators" title="Permalink to this headline">¶</a></h2>
+<p>Operators allows to generate a certain type of task that become a node in
+the DAG when instantiated. All operators derive from BaseOperator and
+inherit a whole lot of attributes and method that way. Refer to the
+BaseOperator documentation for more details.</p>
+<p>There are 3 main types of operators:</p>
+<ul class="simple">
+<li>Operators that performs an <strong>action</strong>, or tells another system to
+perform an action</li>
+<li><strong>Transfer</strong> operators move data from a system to another</li>
+<li><strong>Sensors</strong> are a certain type of operators that will keep running until a
+certain criteria is met. Things like a specific file landing in HDFS or
+S3, a partition appearing in Hive, or a specific time of the day. Sensors
+are derived from <code class="docutils literal notranslate"><span class="pre">BaseSensorOperator</span></code> and run a poke
+method at a specified <code class="docutils literal notranslate"><span class="pre">poke_interval</span></code> until it returns <code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
+</ul>
+<span class="target" id="module-airflow.operators"></span><p>Imports operators dynamically while keeping the package API clean,
+abstracting the underlying modules</p>
+<dl class="class">
+<dt id="airflow.operators.BashOperator">
+<em class="property">class </em><code class="descclassname">airflow.operators.</code><code class="descname">BashOperator</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bash_operator.html#BashOperator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.BashOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#airflow.models.BaseOperator" title="airflow.models.BaseOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">airflow.models.BaseOperator</span></code></a></p>
+<p>Execute a Bash script, command or set of commands.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>bash_command</strong> (<em>string</em>) – The command, set of commands or reference to a
+bash script (must be ‘.sh’) to be executed.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="airflow.operators.BashOperator.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bash_operator.html#BashOperator.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.BashOperator.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the bash command in a temporary directory
+which will be cleaned afterwards</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.operators.BashOperator.on_kill">
+<code class="descname">on_kill</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bash_operator.html#BashOperator.on_kill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.BashOperator.on_kill" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this method to cleanup subprocesses when a task instance
+gets killed. Any use of the threading, subprocess or multiprocessing
+module within an operator needs to be cleaned up or it will leave
+ghost processes behind.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.operators.DummyOperator">
+<em class="property">class </em><code class="descclassname">airflow.operators.</code><code class="descname">DummyOperator</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dummy_operator.html#DummyOperator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.DummyOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#airflow.models.BaseOperator" title="airflow.models.BaseOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">airflow.models.BaseOperator</span></code></a></p>
+<p>Operator that does literally nothing. It can be used to group tasks in a
+DAG.</p>
+<dl class="method">
+<dt id="airflow.operators.DummyOperator.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dummy_operator.html#DummyOperator.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.DummyOperator.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the main method to derive when creating an operator.
+Context is the same dictionary used as when rendering jinja templates.</p>
+<p>Refer to get_template_context for more context.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.operators.EmailOperator">
+<em class="property">class </em><code class="descclassname">airflow.operators.</code><code class="descname">EmailOperator</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/email_operator.html#EmailOperator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.EmailOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#airflow.models.BaseOperator" title="airflow.models.BaseOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">airflow.models.BaseOperator</span></code></a></p>
+<p>Sends an email.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>to</strong> (<em>list</em><em> or </em><em>string</em><em> (</em><em>comma</em><em> or </em><em>semicolon delimited</em><em>)</em>) – list of emails to send the email to</li>
+<li><strong>subject</strong> (<em>string</em>) – subject line for the email (templated)</li>
+<li><strong>html_content</strong> (<em>string</em>) – content of the email (templated), html markup
+is allowed</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="airflow.operators.EmailOperator.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/email_operator.html#EmailOperator.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.EmailOperator.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the main method to derive when creating an operator.
+Context is the same dictionary used as when rendering jinja templates.</p>
+<p>Refer to get_template_context for more context.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.operators.ExternalTaskSensor">
+<em class="property">class </em><code class="descclassname">airflow.operators.</code><code class="descname">ExternalTaskSensor</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sensors.html#ExternalTaskSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.ExternalTaskSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sensors.BaseSensorOperator</span></code></p>
+<p>Waits for a task to complete in a different DAG</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>external_dag_id</strong> (<em>string</em>) – The dag_id that contains the task you want to
+wait for</li>
+<li><strong>external_task_id</strong> (<em>string</em>) – The task_id that contains the task you want to
+wait for</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="airflow.operators.ExternalTaskSensor.poke">
+<code class="descname">poke</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sensors.html#ExternalTaskSensor.poke"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.ExternalTaskSensor.poke" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that the sensors defined while deriving this class should
+override.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.operators.HdfsSensor">
+<em class="property">class </em><code class="descclassname">airflow.operators.</code><code class="descname">HdfsSensor</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sensors.html#HdfsSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.HdfsSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sensors.BaseSensorOperator</span></code></p>
+<p>Waits for a file or folder to land in HDFS</p>
+<dl class="method">
+<dt id="airflow.operators.HdfsSensor.poke">
+<code class="descname">poke</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sensors.html#HdfsSensor.poke"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.HdfsSensor.poke" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that the sensors defined while deriving this class should
+override.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.operators.HivePartitionSensor">
+<em class="property">class </em><code class="descclassname">airflow.operators.</code><code class="descname">HivePartitionSensor</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sensors.html#HivePartitionSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.HivePartitionSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sensors.BaseSensorOperator</span></code></p>
+<p>Waits for a partition to show up in Hive</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>table</strong> (<em>string</em>) – The name of the table to wait for, supports the dot
+notation (my_database.my_table)</li>
+<li><strong>partition</strong> (<em>string</em>) – The partition clause to wait for. This is passed as
+is to the Metastor Thrift client “get_partitions_by_filter” method,
+and apparently supports SQL like notation as in <cite>ds=’2015-01-01’
+AND type=’value’</cite> and &gt; &lt; sings as in “ds&gt;=2015-01-01”</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="airflow.operators.HivePartitionSensor.poke">
+<code class="descname">poke</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sensors.html#HivePartitionSensor.poke"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.HivePartitionSensor.poke" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that the sensors defined while deriving this class should
+override.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.operators.MySqlOperator">
+<em class="property">class </em><code class="descclassname">airflow.operators.</code><code class="descname">MySqlOperator</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mysql_operator.html#MySqlOperator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.MySqlOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#airflow.models.BaseOperator" title="airflow.models.BaseOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">airflow.models.BaseOperator</span></code></a></p>
+<p>Executes sql code in a specific MySQL database</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mysql_conn_id</strong> (<em>string</em>) – reference to a specific mysql database</li>
+<li><strong>sql</strong> (<em>string</em><em> or </em><em>string pointing to a template file. Fil must have
+a '.sql' extensions.</em>) – the sql code to be executed</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="airflow.operators.MySqlOperator.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mysql_operator.html#MySqlOperator.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.MySqlOperator.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the main method to derive when creating an operator.
+Context is the same dictionary used as when rendering jinja templates.</p>
+<p>Refer to get_template_context for more context.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.operators.PrestoCheckOperator">
+<em class="property">class </em><code class="descclassname">airflow.operators.</code><code class="descname">PrestoCheckOperator</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/presto_check_operator.html#PrestoCheckOperator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.PrestoCheckOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#airflow.models.BaseOperator" title="airflow.models.BaseOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">airflow.models.BaseOperator</span></code></a></p>
+<p>Performs a simple check using sql code in a specific Presto database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sql</strong> (<em>string</em>) – the sql to be executed</li>
+<li><strong>presto_conn_id</strong> (<em>string</em>) – reference to the Presto database</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="airflow.operators.PrestoCheckOperator.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>context=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/presto_check_operator.html#PrestoCheckOperator.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.PrestoCheckOperator.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the main method to derive when creating an operator.
+Context is the same dictionary used as when rendering jinja templates.</p>
+<p>Refer to get_template_context for more context.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.operators.PrestoIntervalCheckOperator">
+<em class="property">class </em><code class="descclassname">airflow.operators.</code><code class="descname">PrestoIntervalCheckOperator</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/presto_check_operator.html#PrestoIntervalCheckOperator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.PrestoIntervalCheckOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#airflow.models.BaseOperator" title="airflow.models.BaseOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">airflow.models.BaseOperator</span></code></a></p>
+<p>Checks that the values of metrics given as SQL expressions are within
+a certain tolerance of the ones from days_back before.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>table</strong> (<em>str</em>) – the table name</li>
+<li><strong>days_back</strong> (<em>int</em>) – number of days between ds and the ds we want to check
+against. Defaults to 7 days</li>
+<li><strong>metrics_threshold</strong> (<em>dict</em>) – a dictionary of ratios indexed by metrics</li>
+<li><strong>presto_conn_id</strong> (<em>string</em>) – reference to the Presto database</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="airflow.operators.PrestoIntervalCheckOperator.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>context=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/presto_check_operator.html#PrestoIntervalCheckOperator.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.PrestoIntervalCheckOperator.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the main method to derive when creating an operator.
+Context is the same dictionary used as when rendering jinja templates.</p>
+<p>Refer to get_template_context for more context.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.operators.PrestoValueCheckOperator">
+<em class="property">class </em><code class="descclassname">airflow.operators.</code><code class="descname">PrestoValueCheckOperator</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/presto_check_operator.html#PrestoValueCheckOperator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.PrestoValueCheckOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#airflow.models.BaseOperator" title="airflow.models.BaseOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">airflow.models.BaseOperator</span></code></a></p>
+<p>Performs a simple value check using sql code.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sql</strong> (<em>string</em>) – the sql to be executed</li>
+<li><strong>presto_conn_id</strong> (<em>string</em>) – reference to the Presto database</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="airflow.operators.PrestoValueCheckOperator.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>context=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/presto_check_operator.html#PrestoValueCheckOperator.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.PrestoValueCheckOperator.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the main method to derive when creating an operator.
+Context is the same dictionary used as when rendering jinja templates.</p>
+<p>Refer to get_template_context for more context.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.operators.PythonOperator">
+<em class="property">class </em><code class="descclassname">airflow.operators.</code><code class="descname">PythonOperator</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_operator.html#PythonOperator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.PythonOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#airflow.models.BaseOperator" title="airflow.models.BaseOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">airflow.models.BaseOperator</span></code></a></p>
+<p>Executes a Python callable</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>python_callable</strong> (<em>python callable</em>) – A reference to an object that is callable</li>
+<li><strong>op_kwargs</strong> (<em>dict</em>) – a dictionnary of keyword arguments that will get unpacked
+in your function</li>
+<li><strong>op_args</strong> (<em>list</em>) – a list of positional arguments that will get unpacked when
+calling your callable</li>
+<li><strong>provide_context</strong> (<em>bool</em>) – if set to true, Airflow will pass a set of
+keyword arguments that can be used in your function. This set of
+kwargs correspond exactly to what you can use in your jinja
+templates. For this to work, you need to define <cite>**kwargs</cite> in your
+funciton header.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="airflow.operators.PythonOperator.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_operator.html#PythonOperator.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.PythonOperator.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the main method to derive when creating an operator.
+Context is the same dictionary used as when rendering jinja templates.</p>
+<p>Refer to get_template_context for more context.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.operators.S3KeySensor">
+<em class="property">class </em><code class="descclassname">airflow.operators.</code><code class="descname">S3KeySensor</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sensors.html#S3KeySensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.S3KeySensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sensors.BaseSensorOperator</span></code></p>
+<p>Waits for a key (a file-like instance on S3) to be present in a S3 bucket.
+S3 being a key/value it does not support folders. The path is just a key
+a resource.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>bucket_key</strong> (<em>str</em>) – The key being waited on. Supports full s3:// style url
+or relative path from root level.</li>
+<li><strong>bucket_name</strong> (<em>str</em>) – Name of the S3 bucket</li>
+<li><strong>wildcard_match</strong> (<em>bool</em>) – whether the bucket_key should be interpreted as a Unix
+wildcard pattern</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="airflow.operators.S3KeySensor.poke">
+<code class="descname">poke</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sensors.html#S3KeySensor.poke"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.S3KeySensor.poke" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that the sensors defined while deriving this class should
+override.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.operators.SqlSensor">
+<em class="property">class </em><code class="descclassname">airflow.operators.</code><code class="descname">SqlSensor</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sensors.html#SqlSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.SqlSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sensors.BaseSensorOperator</span></code></p>
+<p>Runs a sql statement until a criteria is met. It will keep trying until
+sql returns no row, or if the first cell in (0, ‘0’, ‘’).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>conn_id</strong> (<em>string</em>) – The connection to run the sensor agains</li>
+<li><strong>sql</strong> – The sql to run. To pass, it needs to return at least one cell
+that contains a non-zero / empty string value.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="airflow.operators.SqlSensor.poke">
+<code class="descname">poke</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sensors.html#SqlSensor.poke"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.SqlSensor.poke" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that the sensors defined while deriving this class should
+override.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.operators.SubDagOperator">
+<em class="property">class </em><code class="descclassname">airflow.operators.</code><code class="descname">SubDagOperator</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/subdag_operator.html#SubDagOperator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.SubDagOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#airflow.models.BaseOperator" title="airflow.models.BaseOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">airflow.models.BaseOperator</span></code></a></p>
+<dl class="method">
+<dt id="airflow.operators.SubDagOperator.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/subdag_operator.html#SubDagOperator.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.SubDagOperator.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the main method to derive when creating an operator.
+Context is the same dictionary used as when rendering jinja templates.</p>
+<p>Refer to get_template_context for more context.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.operators.TimeSensor">
+<em class="property">class </em><code class="descclassname">airflow.operators.</code><code class="descname">TimeSensor</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sensors.html#TimeSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.TimeSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sensors.BaseSensorOperator</span></code></p>
+<p>Waits until the specified time of the day.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>target_time</strong> (<em>datetime.time</em>) – time after which the job succeeds</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="airflow.operators.TimeSensor.poke">
+<code class="descname">poke</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sensors.html#TimeSensor.poke"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.operators.TimeSensor.poke" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that the sensors defined while deriving this class should
+override.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="macros">
+<h2>Macros<a class="headerlink" href="#macros" title="Permalink to this headline">¶</a></h2>
+<p>Here’s a list of variables and macros that can be used in templates</p>
+<div class="section" id="default-variables">
+<h3>Default Variables<a class="headerlink" href="#default-variables" title="Permalink to this headline">¶</a></h3>
+<p>The Airflow engine passes a few variables by default that are accessible
+in all templates</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="39%" />
+<col width="61%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Variable</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">ds</span> <span class="pre">}}</span></code></td>
+<td>the execution date as <code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">yesterday_ds</span> <span class="pre">}}</span></code></td>
+<td>yesterday’s date as  <code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">tomorrow_ds</span> <span class="pre">}}</span></code></td>
+<td>tomorrow’s date as  <code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">ds</span> <span class="pre">}}</span></code></td>
+<td>the execution date as <code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">execution_date</span> <span class="pre">}}</span></code></td>
+<td>the execution_date, (datateime.datetime)</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">dag</span> <span class="pre">}}</span></code></td>
+<td>the DAG object</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">task</span> <span class="pre">}}</span></code></td>
+<td>the Task object</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">macros</span> <span class="pre">}}</span></code></td>
+<td>a reference to the macros package, described bellow</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">task_instance</span> <span class="pre">}}</span></code></td>
+<td>the task_instance object</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">ds_nodash</span> <span class="pre">}}</span></code></td>
+<td>the execution date as <code class="docutils literal notranslate"><span class="pre">YYYYMMDD</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">end_date</span> <span class="pre">}}</span></code></td>
+<td>same as <code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">ds</span> <span class="pre">}}</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">lastest_date</span> <span class="pre">}}</span></code></td>
+<td>same as <code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">ds</span> <span class="pre">}}</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">ti</span> <span class="pre">}}</span></code></td>
+<td>same as <code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">task_instance</span> <span class="pre">}}</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">params</span> <span class="pre">}}</span></code></td>
+<td>a reference to the user defined params dictionary</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">task_instance_key_str</span> <span class="pre">}}</span></code></td>
+<td>a unique, human readable key to the task instance
+formatted <code class="docutils literal notranslate"><span class="pre">{dag_id}_{task_id}_{ds}</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>Note that you can access the objects attributes and methods with simple
+dot notation. Here are some examples of what is possible:
+<code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">task.owner</span> <span class="pre">}}</span></code>, <code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">task.task_id</span> <span class="pre">}}</span></code>, <code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">ti.hostname</span> <span class="pre">}}</span></code>, …
+Refer to the models documentation for more information on the objects
+attributes and methods.</p>
+</div>
+<div class="section" id="id1">
+<h3>Macros<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>These macros live under the <code class="docutils literal notranslate"><span class="pre">macros</span></code> namespace in your templates.</p>
+<span class="target" id="module-airflow.macros"></span><dl class="function">
+<dt id="airflow.macros.ds_add">
+<code class="descclassname">airflow.macros.</code><code class="descname">ds_add</code><span class="sig-paren">(</span><em>ds</em>, <em>days</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/macros.html#ds_add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.macros.ds_add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add or subtract days from a YYYY-MM-DD</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ds</strong> (<em>str</em>) – anchor date in <code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span></code> format to add to</li>
+<li><strong>days</strong> (<em>int</em>) – number of days to add to the ds, you can use negative values</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ds_add</span><span class="p">(</span><span class="s1">&#39;2015-01-01&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="go">&#39;2015-01-06&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds_add</span><span class="p">(</span><span class="s1">&#39;2015-01-06&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">&#39;2015-01-01&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="airflow.macros.ds_format">
+<code class="descclassname">airflow.macros.</code><code class="descname">ds_format</code><span class="sig-paren">(</span><em>ds</em>, <em>input_format</em>, <em>output_format</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/macros.html#ds_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.macros.ds_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes an input string and outputs another string
+as specified in the output format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ds</strong> (<em>str</em>) – input string which contains a date</li>
+<li><strong>input_format</strong> (<em>str</em>) – input string format. E.g. %Y-%m-%d</li>
+<li><strong>output_format</strong> (<em>str</em>) – output string format  E.g. %Y-%m-%d</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ds_format</span><span class="p">(</span><span class="s1">&#39;2015-01-01&#39;</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;%m-</span><span class="si">%d</span><span class="s2">-%y&quot;</span><span class="p">)</span>
+<span class="go">&#39;01-01-15&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds_format</span><span class="p">(</span><span class="s1">&#39;1/5/2015&#39;</span><span class="p">,</span> <span class="s2">&quot;%m/</span><span class="si">%d</span><span class="s2">/%Y&quot;</span><span class="p">,</span>  <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="go">&#39;2015-01-05&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="airflow.macros.random">
+<code class="descclassname">airflow.macros.</code><code class="descname">random</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; x in the interval [0, 1).<a class="headerlink" href="#airflow.macros.random" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<span class="target" id="module-airflow.macros.hive"></span><dl class="function">
+<dt id="airflow.macros.hive.closest_ds_partition">
+<code class="descclassname">airflow.macros.hive.</code><code class="descname">closest_ds_partition</code><span class="sig-paren">(</span><em>table</em>, <em>ds</em>, <em>before=True</em>, <em>schema='default'</em>, <em>metastore_conn_id='metastore_default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/macros/hive.html#closest_ds_partition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.macros.hive.closest_ds_partition" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function finds the date in a list closest to the target date.
+An optional paramter can be given to get the closest before or after.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>table</strong> (<em>str</em>) – A hive table name</li>
+<li><strong>ds</strong> (<em>datetime.date list</em>) – A datestamp <code class="docutils literal notranslate"><span class="pre">%Y-%m-%d</span></code> i.e. <code class="docutils literal notranslate"><span class="pre">yyyy-mm-dd</span></code></li>
+<li><strong>before</strong> (<em>bool</em><em> or </em><em>None</em>) – closest before (True), after (False) or either side of ds</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The closest date</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str or None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tbl</span> <span class="o">=</span> <span class="s1">&#39;airflow.static_babynames_partitioned&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">closest_ds_partition</span><span class="p">(</span><span class="n">tbl</span><span class="p">,</span> <span class="s1">&#39;2015-01-02&#39;</span><span class="p">)</span>
+<span class="go">&#39;2015-01-01&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="airflow.macros.hive.max_partition">
+<code class="descclassname">airflow.macros.hive.</code><code class="descname">max_partition</code><span class="sig-paren">(</span><em>table</em>, <em>schema='default'</em>, <em>field=None</em>, <em>filter=None</em>, <em>metastore_conn_id='metastore_default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/macros/hive.html#max_partition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.macros.hive.max_partition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the max partition for a table.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>schema</strong> (<em>string</em>) – The hive schema the table lives in</li>
+<li><strong>table</strong> (<em>string</em>) – The hive table you are interested in, supports the dot
+notation as in “my_database.my_table”, if a dot is found,
+the schema param is disregarded</li>
+<li><strong>hive_conn_id</strong> (<em>string</em>) – The hive connection you are interested in.
+If your default is set you don’t need to use this parameter.</li>
+<li><strong>filter</strong> (<em>string</em>) – filter on a subset of partition as in
+<cite>sub_part=’specific_value’</cite></li>
+<li><strong>field</strong> – the field to get the max value from. If there’s only
+one partition field, this will be inferred</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">max_partition</span><span class="p">(</span><span class="s1">&#39;airflow.static_babynames_partitioned&#39;</span><span class="p">)</span>
+<span class="go">&#39;2015-01-01&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="models">
+<span id="models-ref"></span><h2>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h2>
+<p>Models are built on top of th SQLAlchemy ORM Base class, instance are
+persisted in the database.</p>
+<span class="target" id="module-airflow.models"></span><dl class="class">
+<dt id="airflow.models.DAG">
+<em class="property">class </em><code class="descclassname">airflow.models.</code><code class="descname">DAG</code><span class="sig-paren">(</span><em>dag_id</em>, <em>schedule_interval=datetime.timedelta(1)</em>, <em>start_date=None</em>, <em>end_date=None</em>, <em>full_filepath=None</em>, <em>template_searchpath=None</em>, <em>user_defined_macros=None</em>, <em>default_args=None</em>, <em>params=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#DAG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.DAG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A dag (directed acyclic graph) is a collection of tasks with directional
+dependencies. A dag also has a schedule, a start end an end date
+(optional). For each schedule, (say daily or hourly), the DAG needs to run
+each individual tasks as their dependencies are met. Certain tasks have
+the property of depending on their own past, meaning that they can’t run
+until their previous schedule (and upstream tasks) are completed.</p>
+<p>DAGs essentially act as namespaces for tasks. A task_id can only be
+added once to a DAG.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dag_id</strong> (<em>string</em>) – The id of the DAG</li>
+<li><strong>schedule_interval</strong> (<em>datetime.timedelta</em>) – Defines how often that DAG runs</li>
+<li><strong>start_date</strong> (<em>datetime.datetime</em>) – The timestamp from which the scheduler will
+attempt to backfill</li>
+<li><strong>end_date</strong> (<em>datetime.datetime</em>) – A date beyond which your DAG won’t run, leave to None
+for open ended scheduling</li>
+<li><strong>template_searchpath</strong> (<em>string</em><em> or </em><em>list of stings</em>) – This list of folders (non relative)
+defines where jinja will look for your templates. Order matters.
+Note that jinja/airflow includes the path of your DAG file by
+default</li>
+<li><strong>user_defined_macros</strong> (<em>dict</em>) – a dictionary of macros that will be merged</li>
+<li><strong>default_args</strong> (<em>dict</em>) – A dictionary of default parameters to be used
+as constructor keyword parameters when initialising operators.
+Note that operators have the same hook, and precede those defined
+here, meaning that if your dict contains <cite>‘depends_on_past’: True</cite>
+here and <cite>‘depends_on_past’: False</cite> in the operator’s call
+<cite>default_args</cite>, the actual value will be <cite>False</cite>.</li>
+<li><strong>params</strong> (<em>dict</em>) – a dictionary of DAG level parameters that are made
+accessible in templates, namespaced under <cite>params</cite>. These
+params can be overriden at the task level.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="airflow.models.DAG.add_task">
+<code class="descname">add_task</code><span class="sig-paren">(</span><em>task</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#DAG.add_task"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.DAG.add_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a task to the DAG</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task</strong> (<em>task</em>) – the task you want to add</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.DAG.add_tasks">
+<code class="descname">add_tasks</code><span class="sig-paren">(</span><em>tasks</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#DAG.add_tasks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.DAG.add_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a list of tasks to the DAG</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task</strong> (<em>list of tasks</em>) – a lit of tasks you want to add</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.DAG.crawl_for_tasks">
+<code class="descname">crawl_for_tasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#DAG.crawl_for_tasks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.DAG.crawl_for_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Typically called at the end of a script by passing globals() as a
+parameter. This allows to not explicitely add every single task to the
+dag explicitely.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.DAG.get_template_env">
+<code class="descname">get_template_env</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#DAG.get_template_env"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.DAG.get_template_env" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a jinja2 Environment while taking into account the DAGs
+template_searchpath and user_defined_macros</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.DAG.override_start_date">
+<code class="descname">override_start_date</code><span class="sig-paren">(</span><em>start_date</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#DAG.override_start_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.DAG.override_start_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets start_date of all tasks and of the DAG itself to a certain date.
+This is used by BackfillJob.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.DAG.set_dependency">
+<code class="descname">set_dependency</code><span class="sig-paren">(</span><em>upstream_task_id</em>, <em>downstream_task_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#DAG.set_dependency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.DAG.set_dependency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple utility method to set dependency between two tasks that
+already have been added to the DAG using add_task()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.DAG.sub_dag">
+<code class="descname">sub_dag</code><span class="sig-paren">(</span><em>task_regex</em>, <em>include_downstream=False</em>, <em>include_upstream=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#DAG.sub_dag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.DAG.sub_dag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a subset of the current dag as a deep copy of the current dag
+based on a regex that should match one or many tasks, and includes
+upstream and downstream neighbours based on the flag passed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.DAG.tree_view">
+<code class="descname">tree_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#DAG.tree_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.DAG.tree_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shows an ascii tree representation of the DAG</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.models.BaseOperator">
+<em class="property">class </em><code class="descclassname">airflow.models.</code><code class="descname">BaseOperator</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#BaseOperator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.BaseOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Abstract base class for all operators. Since operators create objects that
+become node in the dag, BaseOperator contains many recursive methods for
+dag crawling behavior. To derive this class, you are expected to override
+the constructor as well as the ‘execute’ method.</p>
+<p>Operators derived from this task should perform or trigger certain tasks
+synchronously (wait for completion). Example of operators could be an
+operator the runs a Pig job (PigOperator), a sensor operator that
+waits for a partition to land in Hive (HiveSensorOperator), or one that
+moves data from Hive to MySQL (Hive2MySqlOperator). Instances of these
+operators (tasks) target specific operations, running specific scripts,
+functions or data transfers.</p>
+<p>This class is abstract and shouldn’t be instantiated. Instantiating a
+class derived from this one results in the creation of a task object,
+which ultimately becomes a node in DAG objects. Task dependencies should
+be set by using the set_upstream and/or set_downstream methods.</p>
+<p>Note that this class is derived from SQLAlquemy’s Base class, which
+allows us to push metadata regarding tasks to the database. Deriving this
+classes needs to implement the polymorphic specificities documented in
+SQLAlchemy. This should become clear while reading the code for other
+operators.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>task_id</strong> (<em>string</em>) – a unique, meaningful id for the task</li>
+<li><strong>owner</strong> (<em>string</em>) – the owner of the task, using the unix username is recommended</li>
+<li><strong>retries</strong> (<em>int</em>) – the number of retries that should be performed before
+failing the task</li>
+<li><strong>retry_delay</strong> (<em>timedelta</em>) – delay between retries</li>
+<li><strong>start_date</strong> (<em>datetime</em>) – start date for the task, the scheduler will start from
+this point in time</li>
+<li><strong>end_date</strong> (<em>datetime</em>) – if specified, the scheduler won’t go beyond this date</li>
+<li><strong>schedule_interval</strong> (<em>timedelta</em>) – interval at which to schedule the task</li>
+<li><strong>depends_on_past</strong> (<em>bool</em>) – when set to true, task instances will run
+sequentially while relying on the previous task’s schedule to
+succeed. The task instance for the start_date is allowed to run.</li>
+<li><strong>wait_for_downstream</strong> (<em>bool</em>) – when set to true, the task instances
+of task X will wait for the dependencies of the previous instance
+of task X to finish before it moves on the to next schedule.
+This is useful if the different instances of a task X alter
+the same asset, and this asset is used by the dependencies of task X.</li>
+<li><strong>queue</strong> (<em>str</em>) – which queue to target when running this job. Not
+all executors implement queue management, the CeleryExecutor
+does support targeting specific queues.</li>
+<li><strong>dag</strong> (<a class="reference internal" href="#airflow.models.DAG" title="airflow.models.DAG"><em>DAG</em></a>) – a reference to the dag the task is attached to (if any)</li>
+<li><strong>priority_weight</strong> (<em>int</em>) – priority weight of this task against other task.
+This allows the executor to trigger higher priority tasks before
+others when things get backed up.</li>
+<li><strong>pool</strong> (<em>str</em>) – the slot pool this task should run in, slot pools are a
+way to limit concurrency for certain tasks</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="airflow.models.BaseOperator.clear">
+<code class="descname">clear</code><span class="sig-paren">(</span><em>start_date=None</em>, <em>end_date=None</em>, <em>upstream=False</em>, <em>downstream=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#BaseOperator.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.BaseOperator.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the state of task instances associated with the task, following
+the parameters specified.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.BaseOperator.detect_downstream_cycle">
+<code class="descname">detect_downstream_cycle</code><span class="sig-paren">(</span><em>task=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#BaseOperator.detect_downstream_cycle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.BaseOperator.detect_downstream_cycle" title="Permalink to this definition">¶</a></dt>
+<dd><p>When invoked, this routine will raise an exception if a cycle is
+detected downstream from self. It is invoked when tasks are added to
+the DAG to detect cycles.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="airflow.models.BaseOperator.downstream_list">
+<code class="descname">downstream_list</code><a class="headerlink" href="#airflow.models.BaseOperator.downstream_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;property: list of tasks directly downstream</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.BaseOperator.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#BaseOperator.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.BaseOperator.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the main method to derive when creating an operator.
+Context is the same dictionary used as when rendering jinja templates.</p>
+<p>Refer to get_template_context for more context.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.BaseOperator.get_direct_relatives">
+<code class="descname">get_direct_relatives</code><span class="sig-paren">(</span><em>upstream=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#BaseOperator.get_direct_relatives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.BaseOperator.get_direct_relatives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the direct relatives to the current task, upstream or
+downstream.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.BaseOperator.get_flat_relatives">
+<code class="descname">get_flat_relatives</code><span class="sig-paren">(</span><em>upstream=False</em>, <em>l=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#BaseOperator.get_flat_relatives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.BaseOperator.get_flat_relatives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a flat list of relatives, either upstream or downstream.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.BaseOperator.get_task_instances">
+<code class="descname">get_task_instances</code><span class="sig-paren">(</span><em>session</em>, <em>start_date=None</em>, <em>end_date=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#BaseOperator.get_task_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.BaseOperator.get_task_instances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a set of task instance related to this task for a specific date
+range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.BaseOperator.on_kill">
+<code class="descname">on_kill</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#BaseOperator.on_kill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.BaseOperator.on_kill" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this method to cleanup subprocesses when a task instance
+gets killed. Any use of the threading, subprocess or multiprocessing
+module within an operator needs to be cleaned up or it will leave
+ghost processes behind.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.BaseOperator.prepare_template">
+<code class="descname">prepare_template</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#BaseOperator.prepare_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.BaseOperator.prepare_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook that is triggered after the templated fields get replaced
+by their content. If you need your operator to alter the
+content of the file before the template is rendered,
+it should override this method to do so.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.BaseOperator.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>start_date=None</em>, <em>end_date=None</em>, <em>ignore_dependencies=False</em>, <em>force=False</em>, <em>mark_success=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#BaseOperator.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.BaseOperator.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a set of task instances for a date range.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="airflow.models.BaseOperator.schedule_interval">
+<code class="descname">schedule_interval</code><a class="headerlink" href="#airflow.models.BaseOperator.schedule_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>The schedule interval of the DAG always wins over individual tasks so
+that tasks within a DAG always line up. The task still needs a
+schedule_interval as it may not be attached to a DAG.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.BaseOperator.set_downstream">
+<code class="descname">set_downstream</code><span class="sig-paren">(</span><em>task_or_task_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#BaseOperator.set_downstream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.BaseOperator.set_downstream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a task, or a task task to be directly downstream from the current
+task.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.BaseOperator.set_upstream">
+<code class="descname">set_upstream</code><span class="sig-paren">(</span><em>task_or_task_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#BaseOperator.set_upstream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.BaseOperator.set_upstream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a task, or a task task to be directly upstream from the current
+task.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="airflow.models.BaseOperator.upstream_list">
+<code class="descname">upstream_list</code><a class="headerlink" href="#airflow.models.BaseOperator.upstream_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;property: list of tasks directly upstream</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.models.TaskInstance">
+<em class="property">class </em><code class="descclassname">airflow.models.</code><code class="descname">TaskInstance</code><span class="sig-paren">(</span><em>task</em>, <em>execution_date</em>, <em>state=None</em>, <em>job=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#TaskInstance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.TaskInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<p>Task instances store the state of a task instance. This table is the
+authority and single source of truth around what tasks have run and the
+state they are in.</p>
+<p>The SqlAchemy model doesn’t have a SqlAlchemy foreign key to the task or
+dag model deliberately to have more control over transactions.</p>
+<p>Database transactions on this table should insure double triggers and
+any confusion around what task instances are or aren’t ready to run
+even while multiple schedulers may be firing task instances.</p>
+<dl class="method">
+<dt id="airflow.models.TaskInstance.are_dependencies_met">
+<code class="descname">are_dependencies_met</code><span class="sig-paren">(</span><em>main_session=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#TaskInstance.are_dependencies_met"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.TaskInstance.are_dependencies_met" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a boolean on whether the upstream tasks are in a SUCCESS state
+and considers depends_on_past and the previous run’s state.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.TaskInstance.are_dependents_done">
+<code class="descname">are_dependents_done</code><span class="sig-paren">(</span><em>main_session=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#TaskInstance.are_dependents_done"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.TaskInstance.are_dependents_done" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the dependents of this task instance have all succeeded.
+This is meant to be used by wait_for_downstream.</p>
+<p>This is useful when you do not want to start processing the next
+schedule of a task until the dependents are done. For instance,
+if the task DROPs and recreates a table.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.TaskInstance.command">
+<code class="descname">command</code><span class="sig-paren">(</span><em>mark_success=False</em>, <em>ignore_dependencies=False</em>, <em>force=False</em>, <em>local=False</em>, <em>pickle_id=None</em>, <em>raw=False</em>, <em>job_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#TaskInstance.command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.TaskInstance.command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a command that can be executed anywhere where airflow is
+installed. This command is part of the message sent to executors by
+the orchestrator.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.TaskInstance.current_state">
+<code class="descname">current_state</code><span class="sig-paren">(</span><em>main_session=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#TaskInstance.current_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.TaskInstance.current_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the very latest state from the database, if a session is passed,
+we use and looking up the state becomes part of the session, otherwise
+a new session is used.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.TaskInstance.error">
+<code class="descname">error</code><span class="sig-paren">(</span><em>main_session=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#TaskInstance.error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.TaskInstance.error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forces the task instance’s state to FAILED in the database.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.TaskInstance.is_queueable">
+<code class="descname">is_queueable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#TaskInstance.is_queueable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.TaskInstance.is_queueable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a boolean on whether the task instance has met all dependencies
+and is ready to run. It considers the task’s state, the state
+of its dependencies, depends_on_past and makes sure the execution
+isn’t in the future. It doesn’t take into
+account whether the pool has a slot for it to run.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.TaskInstance.is_runnable">
+<code class="descname">is_runnable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#TaskInstance.is_runnable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.TaskInstance.is_runnable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether a task is ready to run AND there’s room in the
+queue.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="airflow.models.TaskInstance.key">
+<code class="descname">key</code><a class="headerlink" href="#airflow.models.TaskInstance.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a tuple that identifies the task instance uniquely</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.TaskInstance.pool_full">
+<code class="descname">pool_full</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#TaskInstance.pool_full"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.TaskInstance.pool_full" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a boolean as to whether the slot pool has room for this
+task to run</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.TaskInstance.ready_for_retry">
+<code class="descname">ready_for_retry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#TaskInstance.ready_for_retry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.TaskInstance.ready_for_retry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks on whether the task instance is in the right state and timeframe
+to be retried.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.TaskInstance.refresh_from_db">
+<code class="descname">refresh_from_db</code><span class="sig-paren">(</span><em>main_session=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#TaskInstance.refresh_from_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.TaskInstance.refresh_from_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refreshes the task instance from the database based on the primary key</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.TaskInstance.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>verbose=True</em>, <em>ignore_dependencies=False</em>, <em>force=False</em>, <em>mark_success=False</em>, <em>test_mode=False</em>, <em>job_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#TaskInstance.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.TaskInstance.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the task instance.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.models.DagBag">
+<em class="property">class </em><code class="descclassname">airflow.models.</code><code class="descname">DagBag</code><span class="sig-paren">(</span><em>dag_folder=None</em>, <em>executor=&lt;airflow.executors.sequential_executor.SequentialExecutor object&gt;</em>, <em>include_examples=True</em>, <em>sync_to_db=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#DagBag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.DagBag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A dagbag is a collection of dags, parsed out of a folder tree and has high
+level configuration settings, like what database to use as a backend and
+what executor to use to fire off tasks. This makes it easier to run
+distinct environments for say production and development, tests, or for
+different teams or security profiles. What would have been system level
+settings are now dagbag level so that one system can run multiple,
+independent settings sets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dag_folder</strong> (<em>str</em>) – the folder to scan to find DAGs</li>
+<li><strong>executor</strong> – the executor to use when executing task instances
+in this DagBag</li>
+<li><strong>include_examples</strong> (<em>bool</em>) – whether to include the examples that ship
+with airflow or not</li>
+<li><strong>sync_to_db</strong> (<em>bool</em>) – whether to sync the properties of the DAGs to
+the metadata DB while finding them, typically should be done
+by the scheduler job only</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="airflow.models.DagBag.bag_dag">
+<code class="descname">bag_dag</code><span class="sig-paren">(</span><em>dag</em>, <em>parent_dag</em>, <em>root_dag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#DagBag.bag_dag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.DagBag.bag_dag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the DAG into the bag, recurses into sub dags.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.DagBag.collect_dags">
+<code class="descname">collect_dags</code><span class="sig-paren">(</span><em>dag_folder='/home/jone/airflow/dags'</em>, <em>only_if_updated=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#DagBag.collect_dags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.DagBag.collect_dags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a file path or a folder, this file looks for python modules,
+imports them and adds them to the dagbag collection.</p>
+<p>Note that if a .airflowignore file is found while processing,
+the directory, it will behaves much like a .gitignore does,
+ignoring files that match any of the regex patterns specified
+in the file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.DagBag.get_dag">
+<code class="descname">get_dag</code><span class="sig-paren">(</span><em>dag_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#DagBag.get_dag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.DagBag.get_dag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the DAG out of the dictionary, and refreshes it if expired</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.models.DagBag.process_file">
+<code class="descname">process_file</code><span class="sig-paren">(</span><em>filepath</em>, <em>only_if_updated=True</em>, <em>safe_mode=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#DagBag.process_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.DagBag.process_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a path to a python module, this method imports the module and
+look for dag objects whithin it.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.models.Connection">
+<em class="property">class </em><code class="descclassname">airflow.models.</code><code class="descname">Connection</code><span class="sig-paren">(</span><em>conn_id=None</em>, <em>conn_type=None</em>, <em>host=None</em>, <em>login=None</em>, <em>password=None</em>, <em>schema=None</em>, <em>port=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/models.html#Connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.models.Connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<p>Placeholder to store information about different database instances
+connection information. The idea here is that scripts use references to
+database instances (conn_id) instead of hard coding hostname, logins and
+passwords when using operators or hooks.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-airflow.hooks">
+<span id="hooks"></span><h2>Hooks<a class="headerlink" href="#module-airflow.hooks" title="Permalink to this headline">¶</a></h2>
+<p>Imports the hooks dynamically while keeping the package API clean,
+abstracting the underlying modules</p>
+<dl class="class">
+<dt id="airflow.hooks.MySqlHook">
+<em class="property">class </em><code class="descclassname">airflow.hooks.</code><code class="descname">MySqlHook</code><span class="sig-paren">(</span><em>mysql_conn_id='mysql_default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mysql_hook.html#MySqlHook"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.MySqlHook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">airflow.hooks.base_hook.BaseHook</span></code></p>
+<p>Interact with MySQL.</p>
+<dl class="method">
+<dt id="airflow.hooks.MySqlHook.get_conn">
+<code class="descname">get_conn</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mysql_hook.html#MySqlHook.get_conn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.MySqlHook.get_conn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a mysql connection object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.MySqlHook.get_pandas_df">
+<code class="descname">get_pandas_df</code><span class="sig-paren">(</span><em>sql</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mysql_hook.html#MySqlHook.get_pandas_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.MySqlHook.get_pandas_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes the sql and returns a pandas dataframe</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.MySqlHook.get_records">
+<code class="descname">get_records</code><span class="sig-paren">(</span><em>sql</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mysql_hook.html#MySqlHook.get_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.MySqlHook.get_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes the sql and returns a set of records.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.MySqlHook.insert_rows">
+<code class="descname">insert_rows</code><span class="sig-paren">(</span><em>table</em>, <em>rows</em>, <em>target_fields=None</em>, <em>commit_every=1000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mysql_hook.html#MySqlHook.insert_rows"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.MySqlHook.insert_rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>A generic way to insert a set of tuples into a table,
+the whole set of inserts is treated as one transaction</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.hooks.PrestoHook">
+<em class="property">class </em><code class="descclassname">airflow.hooks.</code><code class="descname">PrestoHook</code><span class="sig-paren">(</span><em>host=None</em>, <em>db=None</em>, <em>port=None</em>, <em>presto_conn_id='presto_default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/presto_hook.html#PrestoHook"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.PrestoHook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">airflow.hooks.base_hook.BaseHook</span></code></p>
+<p>Interact with Presto through PyHive!</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ph</span> <span class="o">=</span> <span class="n">PrestoHook</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT count(1) AS num FROM airflow.static_babynames&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ph</span><span class="o">.</span><span class="n">get_records</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+<span class="go">[[340698]]</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="airflow.hooks.PrestoHook.get_cursor">
+<code class="descname">get_cursor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/presto_hook.html#PrestoHook.get_cursor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.PrestoHook.get_cursor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a cursor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.PrestoHook.get_first">
+<code class="descname">get_first</code><span class="sig-paren">(</span><em>hql</em>, <em>parameters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/presto_hook.html#PrestoHook.get_first"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.PrestoHook.get_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns only the first row, regardless of how many rows the query
+returns.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.PrestoHook.get_pandas_df">
+<code class="descname">get_pandas_df</code><span class="sig-paren">(</span><em>hql</em>, <em>parameters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/presto_hook.html#PrestoHook.get_pandas_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.PrestoHook.get_pandas_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a pandas dataframe from a sql query.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.PrestoHook.get_records">
+<code class="descname">get_records</code><span class="sig-paren">(</span><em>hql</em>, <em>parameters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/presto_hook.html#PrestoHook.get_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.PrestoHook.get_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a set of records from Presto</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.PrestoHook.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>hql</em>, <em>parameters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/presto_hook.html#PrestoHook.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.PrestoHook.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the statement against Presto. Can be used to create views.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.hooks.S3Hook">
+<em class="property">class </em><code class="descclassname">airflow.hooks.</code><code class="descname">S3Hook</code><span class="sig-paren">(</span><em>s3_conn_id='s3_default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/S3_hook.html#S3Hook"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.S3Hook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">airflow.hooks.base_hook.BaseHook</span></code></p>
+<p>Interact with S3. This class is a wrapper around the boto library.</p>
+<dl class="method">
+<dt id="airflow.hooks.S3Hook.check_for_bucket">
+<code class="descname">check_for_bucket</code><span class="sig-paren">(</span><em>bucket_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/S3_hook.html#S3Hook.check_for_bucket"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.S3Hook.check_for_bucket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if bucket_name exists.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>bucket_name</strong> (<em>str</em>) – the name of the bucket</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.S3Hook.check_for_key">
+<code class="descname">check_for_key</code><span class="sig-paren">(</span><em>key</em>, <em>bucket_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/S3_hook.html#S3Hook.check_for_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.S3Hook.check_for_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that a key exists in a bucket</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.S3Hook.check_for_prefix">
+<code class="descname">check_for_prefix</code><span class="sig-paren">(</span><em>bucket_name</em>, <em>prefix</em>, <em>delimiter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/S3_hook.html#S3Hook.check_for_prefix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.S3Hook.check_for_prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that a prefix exists in a bucket</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.S3Hook.check_for_wildcard_key">
+<code class="descname">check_for_wildcard_key</code><span class="sig-paren">(</span><em>wildcard_key</em>, <em>bucket_name=None</em>, <em>delimiter=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/S3_hook.html#S3Hook.check_for_wildcard_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.S3Hook.check_for_wildcard_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that a key matching a wildcard expression exists in a bucket</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.S3Hook.get_bucket">
+<code class="descname">get_bucket</code><span class="sig-paren">(</span><em>bucket_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/S3_hook.html#S3Hook.get_bucket"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.S3Hook.get_bucket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a boto.s3.bucket.Bucket object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>bucket_name</strong> (<em>str</em>) – the name of the bucket</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.S3Hook.get_conn">
+<code class="descname">get_conn</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/S3_hook.html#S3Hook.get_conn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.S3Hook.get_conn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the boto S3Connection object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.S3Hook.get_key">
+<code class="descname">get_key</code><span class="sig-paren">(</span><em>key</em>, <em>bucket_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/S3_hook.html#S3Hook.get_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.S3Hook.get_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a boto.s3.key.Key object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>key</strong> (<em>str</em>) – the path to the key</li>
+<li><strong>bucket_name</strong> (<em>str</em>) – the name of the bucket</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.S3Hook.get_wildcard_key">
+<code class="descname">get_wildcard_key</code><span class="sig-paren">(</span><em>wildcard_key</em>, <em>bucket_name=None</em>, <em>delimiter=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/S3_hook.html#S3Hook.get_wildcard_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.S3Hook.get_wildcard_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a boto.s3.key.Key object matching the regular expression</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>regex_key</strong> (<em>str</em>) – the path to the key</li>
+<li><strong>bucket_name</strong> (<em>str</em>) – the name of the bucket</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.S3Hook.list_keys">
+<code class="descname">list_keys</code><span class="sig-paren">(</span><em>bucket_name</em>, <em>prefix=''</em>, <em>delimiter=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/S3_hook.html#S3Hook.list_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.S3Hook.list_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists keys in a bucket under prefix and not containing delimiter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>bucket_name</strong> (<em>str</em>) – the name of the bucket</li>
+<li><strong>prefix</strong> (<em>str</em>) – a key prefix</li>
+<li><strong>delimiter</strong> (<em>str</em>) – the delimiter marks key hierarchy.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.S3Hook.list_prefixes">
+<code class="descname">list_prefixes</code><span class="sig-paren">(</span><em>bucket_name</em>, <em>prefix=''</em>, <em>delimiter=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/S3_hook.html#S3Hook.list_prefixes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.S3Hook.list_prefixes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists prefixes in a bucket under prefix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>bucket_name</strong> (<em>str</em>) – the name of the bucket</li>
+<li><strong>prefix</strong> (<em>str</em>) – a key prefix</li>
+<li><strong>delimiter</strong> (<em>str</em>) – the delimiter marks key hierarchy.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.S3Hook.load_file">
+<code class="descname">load_file</code><span class="sig-paren">(</span><em>filename</em>, <em>key</em>, <em>bucket_name=None</em>, <em>replace=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/S3_hook.html#S3Hook.load_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.S3Hook.load_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a local file to S3</p>
+<p>This is provided as a convenience to drop a file in S3. It uses the
+boto infrastructure to ship a file to s3. It is currently using only
+a single part download, and should not be used to move large files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<em>str</em>) – name of the file to load.</li>
+<li><strong>key</strong> (<em>str</em>) – S3 key that will point to the file</li>
+<li><strong>bucket_name</strong> (<em>str</em>) – Name of the bucket in which to store the file</li>
+<li><strong>replace</strong> (<em>bool</em>) – A flag to decide whther or not to overwrite the key
+if it already exists</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.hooks.SqliteHook">
+<em class="property">class </em><code class="descclassname">airflow.hooks.</code><code class="descname">SqliteHook</code><span class="sig-paren">(</span><em>sqlite_conn_id='sqlite_default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sqlite_hook.html#SqliteHook"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.SqliteHook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">airflow.hooks.base_hook.BaseHook</span></code></p>
+<p>Interact with SQLite.</p>
+<dl class="method">
+<dt id="airflow.hooks.SqliteHook.get_conn">
+<code class="descname">get_conn</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sqlite_hook.html#SqliteHook.get_conn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.SqliteHook.get_conn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a sqlite connection object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.SqliteHook.get_pandas_df">
+<code class="descname">get_pandas_df</code><span class="sig-paren">(</span><em>sql</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sqlite_hook.html#SqliteHook.get_pandas_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.SqliteHook.get_pandas_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes the sql and returns a pandas dataframe
+&gt;&gt;&gt; h = SqliteHook()
+&gt;&gt;&gt; sql = “SELECT * FROM test_table WHERE i=1 LIMIT 1;”
+&gt;&gt;&gt; h.get_pandas_df(sql)</p>
+<blockquote>
+<div>i</div></blockquote>
+<p>0  1</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.SqliteHook.get_records">
+<code class="descname">get_records</code><span class="sig-paren">(</span><em>sql</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sqlite_hook.html#SqliteHook.get_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.SqliteHook.get_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes the sql and returns a set of records.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="n">SqliteHook</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM test_table WHERE i=1 LIMIT 1;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span><span class="o">.</span><span class="n">get_records</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+<span class="go">[(1,)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.SqliteHook.insert_rows">
+<code class="descname">insert_rows</code><span class="sig-paren">(</span><em>table</em>, <em>rows</em>, <em>target_fields=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sqlite_hook.html#SqliteHook.insert_rows"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.SqliteHook.insert_rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>A generic way to insert a set of tuples into a table,
+the whole set of inserts is treated as one transaction</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="n">SqliteHook</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span><span class="o">.</span><span class="n">insert_rows</span><span class="p">(</span><span class="s1">&#39;test_table&#39;</span><span class="p">,</span> <span class="p">[[</span><span class="mi">1</span><span class="p">]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.hooks.SqliteHook.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>sql</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sqlite_hook.html#SqliteHook.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.hooks.SqliteHook.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a command</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="n">SqliteHook</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;CREATE TABLE IF NOT EXISTS test_table (i INTEGER);&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="executors">
+<h2>Executors<a class="headerlink" href="#executors" title="Permalink to this headline">¶</a></h2>
+<p>Executors are the mechanism by which task instances get run.</p>
+<span class="target" id="module-airflow.executors"></span><dl class="class">
+<dt id="airflow.executors.LocalExecutor">
+<em class="property">class </em><code class="descclassname">airflow.executors.</code><code class="descname">LocalExecutor</code><span class="sig-paren">(</span><em>parallelism=32</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/executors/local_executor.html#LocalExecutor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.executors.LocalExecutor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">airflow.executors.base_executor.BaseExecutor</span></code></p>
+<p>LocalExecutor executes tasks locally in parallel. It uses the
+multiprocessing Python library and queues to parallelize the execution
+of tasks.</p>
+<dl class="method">
+<dt id="airflow.executors.LocalExecutor.end">
+<code class="descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/executors/local_executor.html#LocalExecutor.end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.executors.LocalExecutor.end" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when the caller is done submitting job and is
+wants to wait synchronously for the job submitted previously to be
+all done.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.executors.LocalExecutor.execute_async">
+<code class="descname">execute_async</code><span class="sig-paren">(</span><em>key</em>, <em>command</em>, <em>queue=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/executors/local_executor.html#LocalExecutor.execute_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.executors.LocalExecutor.execute_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method will execute the command asynchronously.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.executors.LocalExecutor.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/executors/local_executor.html#LocalExecutor.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.executors.LocalExecutor.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executors may need to get things started. For example LocalExecutor
+starts N workers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.executors.LocalExecutor.sync">
+<code class="descname">sync</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/executors/local_executor.html#LocalExecutor.sync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.executors.LocalExecutor.sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sync will get called periodically by the heartbeat method.
+Executors should override this to perform gather statuses.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.executors.CeleryExecutor">
+<em class="property">class </em><code class="descclassname">airflow.executors.</code><code class="descname">CeleryExecutor</code><span class="sig-paren">(</span><em>parallelism=32</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/executors/celery_executor.html#CeleryExecutor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.executors.CeleryExecutor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">airflow.executors.base_executor.BaseExecutor</span></code></p>
+<p>CeleryExecutor is recommended for production use of Airflow. It allows
+distributing the execution of task instances to multiple worker nodes.</p>
+<p>Celery is a simple, flexible and reliable distributed system to process
+vast amounts of messages, while providing operations with the tools
+required to maintain such a system.</p>
+<dl class="method">
+<dt id="airflow.executors.CeleryExecutor.end">
+<code class="descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/executors/celery_executor.html#CeleryExecutor.end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.executors.CeleryExecutor.end" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when the caller is done submitting job and is
+wants to wait synchronously for the job submitted previously to be
+all done.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.executors.CeleryExecutor.execute_async">
+<code class="descname">execute_async</code><span class="sig-paren">(</span><em>key</em>, <em>command</em>, <em>queue='default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/executors/celery_executor.html#CeleryExecutor.execute_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.executors.CeleryExecutor.execute_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method will execute the command asynchronously.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.executors.CeleryExecutor.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/executors/celery_executor.html#CeleryExecutor.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.executors.CeleryExecutor.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executors may need to get things started. For example LocalExecutor
+starts N workers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.executors.CeleryExecutor.sync">
+<code class="descname">sync</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/executors/celery_executor.html#CeleryExecutor.sync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.executors.CeleryExecutor.sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sync will get called periodically by the heartbeat method.
+Executors should override this to perform gather statuses.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="airflow.executors.SequentialExecutor">
+<em class="property">class </em><code class="descclassname">airflow.executors.</code><code class="descname">SequentialExecutor</code><a class="reference internal" href="_modules/airflow/executors/sequential_executor.html#SequentialExecutor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.executors.SequentialExecutor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">airflow.executors.base_executor.BaseExecutor</span></code></p>
+<p>This executor will only run one task instance at a time, can be used
+for debugging. It is also the only executor that can be used with sqlite
+since sqlite doesn’t support multiple connections.</p>
+<p>Since we want airflow to work out of the box, it defaults to this
+SequentialExecutor alongside sqlite as you first install it.</p>
+<dl class="method">
+<dt id="airflow.executors.SequentialExecutor.end">
+<code class="descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/executors/sequential_executor.html#SequentialExecutor.end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.executors.SequentialExecutor.end" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when the caller is done submitting job and is
+wants to wait synchronously for the job submitted previously to be
+all done.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.executors.SequentialExecutor.execute_async">
+<code class="descname">execute_async</code><span class="sig-paren">(</span><em>key</em>, <em>command</em>, <em>queue=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/executors/sequential_executor.html#SequentialExecutor.execute_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.executors.SequentialExecutor.execute_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method will execute the command asynchronously.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="airflow.executors.SequentialExecutor.sync">
+<code class="descname">sync</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/airflow/executors/sequential_executor.html#SequentialExecutor.sync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airflow.executors.SequentialExecutor.sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sync will get called periodically by the heartbeat method.
+Executors should override this to perform gather statuses.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="scheduler.html" class="btn btn-neutral float-left" title="The Scheduler" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Maxime Beauchemin
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

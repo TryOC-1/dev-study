@@ -1,0 +1,240 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>The Scheduler &mdash; Airflow 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Code / API" href="code.html" />
+    <link rel="prev" title="Command Line Interface" href="cli.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Airflow
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui.html">UI / Screenshots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="profiling.html">Data Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command Line Interface</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">The Scheduler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html">Code / API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Airflow</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>The Scheduler</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/scheduler.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="the-scheduler">
+<h1>The Scheduler<a class="headerlink" href="#the-scheduler" title="Permalink to this headline">¶</a></h1>
+<p>The Airflow scheduler monitors all tasks and all dags and schedules the
+task instances whose dependencies have been met. Behinds the scene,
+it monitors a folder for all dag objects it may contain,
+and periodically inspects all tasks to see whether is can schedule the
+next run.</p>
+<p>Note that:</p>
+<ul class="simple">
+<li>It <strong>won’t parallelize</strong> multiple instances of the same tasks, it always wait for the previous schedule to be done to move forward</li>
+<li>It will <strong>not fill in gaps</strong>, it only moves forward in time from the latest task instance on that task</li>
+<li>If a task instance failed and the task is set to <code class="docutils literal notranslate"><span class="pre">depends_on_past=True</span></code>, it won’t move forward from that point until the error state is cleared and runs successfully, or is marked as successful</li>
+<li>If no task history exist for a task, it will attempt to run it on the task’s <code class="docutils literal notranslate"><span class="pre">start_date</span></code></li>
+</ul>
+<p>Understanding this, you should be able to comprehend what is keeping your
+tasks from running or moving forward. To allow the scheduler to move forward, you may want to clear the state
+of some task instances, or mark them as successful.</p>
+<p>Here are some of the ways you can <strong>unblock tasks</strong>:</p>
+<ul class="simple">
+<li>From the UI, you can <strong>clear</strong> (as in delete the status of) individual task instances from the tasks instance dialog, while defining whether you want to includes the past/future and the upstream/downstream dependencies. Note that a confirmation window comes next and allows you to see the set you are about to clear.</li>
+<li>The CLI <code class="docutils literal notranslate"><span class="pre">airflow</span> <span class="pre">clear</span> <span class="pre">-h</span></code> has lots of options when it comes to clearing task instances states, including specfying date ranges, targeting task_ids by specifying a regular expression, flags for including upstream and downstream relatives, and targeting task instances in specific states (<code class="docutils literal notranslate"><span class="pre">failed</span></code>, or <code class="docutils literal notranslate"><span class="pre">success</span></code>)</li>
+<li>Marking task instances as successful can be done through the UI. This is mostly to fix false negatives, or when the fix has been applied oustide of Airflow for instance.</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">airflow</span> <span class="pre">backfill</span></code> CLI subcommand has a flag to <code class="docutils literal notranslate"><span class="pre">--mark_success</span></code> and allows to select subsections of the dag as well as specifying date ranges.</li>
+</ul>
+<p>The Airflow scheduler is designed to run as a persitent service in an
+Airflow production envrionement. To kick it off, all you need to do is
+execute <code class="docutils literal notranslate"><span class="pre">airflow</span> <span class="pre">scheduler</span></code>. It will use the configuration specified in the
+<code class="docutils literal notranslate"><span class="pre">airflow.cfg</span></code>.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="code.html" class="btn btn-neutral float-right" title="Code / API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cli.html" class="btn btn-neutral float-left" title="Command Line Interface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Maxime Beauchemin
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
