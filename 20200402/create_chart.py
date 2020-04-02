@@ -2,12 +2,12 @@
 
 python create_chart.py [--type 차트타입] [--stations 해당지역] apt_price.csv
 """
-
+import sys
 import argparse
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import rc
-rc('font', family='AppleGothic')
+# rc('font', family='AppleGothic')
 
 plt.rcParams['axes.unicode_minus'] = False
 
@@ -39,16 +39,40 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('file', type=str,
                         help ='input csv file')
-    parser.add_argument('--bar', action='store_true',
-                        help ='bar chart')
-    parser.add_argument('--pie', action='store_true',
-                        help ='pie chart')
+    parser.add_argument('-t', '--type', type=str, choices=['line', 'bar', 'pie'])
+    parser.add_argument('-s', '--stations', type=str, help='stations name with `,`')
     args = parser.parse_args()
+
+    if not args.file.endswith('.csv'):
+        parser.print_help()
+        sys.exit(1)
+
     data = read_file(args.file)
     data = handling(data)
-    if args.bar : 
+
+    valid_stations = [
+        '서울', '부산', '대구', '광주', '대전', '울산', '제주'
+    ]
+
+    if args.stations:
+        stations = list(map(lambda x: x.strip(), args.stations.split(',')))
+        new_data = pd.DataFrame()
+        for station in stations:
+            if station not in valid_stations:
+                print(f'"{station}" not in {valid_stations}')
+                sys.exit(1)
+            print(data[data['지역명'] == station])
+            new_data.append(data[data['지역명'] == station], ignore_index=True)
+            
+        print(new_data)
+        data = new_data
+        # data = data[stations]
+
+    if args.type == 'bar': 
         bar_chart(data)
-    elif args.pie :
+    elif args.type == 'pie':
         pie_chart(data)
+    # elif args.type == 'line':
+    #     line_chart(data)
 
     save_png(data)
