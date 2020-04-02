@@ -7,7 +7,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib import rc
-rc('font', family='AppleGothic')
+
+if sys.platform == 'linux':  # Windows
+    rc('font', family='NanumBarunGothic')
+elif sys.platform == 'darwin':  # MacOS
+    rc('font', family='AppleGothic')
 
 plt.rcParams['axes.unicode_minus'] = False
 
