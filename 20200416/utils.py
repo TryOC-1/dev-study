@@ -9,11 +9,18 @@ LOGDIR = "log"
 def set_logger():
     log = logging.getLogger()
     log.setLevel(logging.DEBUG)
-    # TODO: Set log formatter
+    logformat = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    # Add stream handler
+    ch = logging.StreamHandler()
+    ch.setFormatter(logformat)
+    log.addHandler(ch)
 
-    # TODO: Add stream handler
-
-    # TODO: Add file handler
+    # Add file handler
     os.makedirs(LOGDIR, exist_ok=True)
     today_str = datetime.now().strftime("%Y%m%d")
     log_file = os.path.join(LOGDIR, today_str + ".log")
+    fh = logging.FileHandler(log_file)
+    fh.setFormatter(logformat)
+    log.addHandler(fh)
