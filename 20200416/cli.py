@@ -55,16 +55,7 @@ def get_parser():
     subparsers = parser.add_subparsers(help="sub-command help")
 
     # TODO: Add `check-level subparser
-    parser_check = subparsers.add_parser('check-level', help='check log level')
-    parser_check.add_argument("{debug,info,warning,error}", help="the level of log message")
 
     # TODO: Add `create-chart` subparser
-    parser_create = subparsers.add_parser('create-chart', help='create chart')
-    parser_create.add_argument("file", type=str, help="input csv file")
-    parser_create.add_argument("-t","--type", choices=['line','bar','pie'], default="bar")
-    parser_create.add_argument("-s","--stations", help="stations name with `,`")
-    parser_create.add_argument("-l","--setlevel", choices=['debug','info','warning','error'])
-    parser_create.set_defaults(func=create_chart)
-
 
     return parser
