@@ -60,8 +60,11 @@ def get_parser():
 
     # TODO: Add `create-chart` subparser
     parser_create = subparsers.add_parser('create-chart', help='create chart')
-    parser_create.add_argument("-t","--type", choices=['line','bar','pie'])
+    parser_create.add_argument("file", type=str, help="input csv file")
+    parser_create.add_argument("-t","--type", choices=['line','bar','pie'], default="bar")
     parser_create.add_argument("-s","--stations", help="stations name with `,`")
     parser_create.add_argument("-l","--setlevel", choices=['debug','info','warning','error'])
+    parser_create.set_defaults(func=create_chart)
+
 
     return parser
