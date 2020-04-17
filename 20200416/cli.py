@@ -54,17 +54,28 @@ def get_parser():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(help="sub-command help")
 
-    # TODO: Add `check-level subparser
-    parser_check = subparsers.add_parser('check-level', help='check log level')
-    parser_check.add_argument("{debug,info,warning,error}", help="the level of log message")
+    ht = "check log level"
+    parser_check_level = subparsers.add_parser("check-level", help=ht)
+    parser_check_level.add_argument(
+        "level",
+        type=str,
+        choices=["debug", "info", "warning", "error"],
+        help="The level of log message",
+    )
+    parser_check_level.set_defaults(func=check_level)
 
-    # TODO: Add `create-chart` subparser
-    parser_create = subparsers.add_parser('create-chart', help='create chart')
-    parser_create.add_argument("file", type=str, help="input csv file")
-    parser_create.add_argument("-t","--type", choices=['line','bar','pie'], default="bar")
-    parser_create.add_argument("-s","--stations", help="stations name with `,`")
-    parser_create.add_argument("-l","--setlevel", choices=['debug','info','warning','error'])
-    parser_create.set_defaults(func=create_chart)
-
+    ht = "create chart"
+    parser_create_chart = subparsers.add_parser("create-chart", help=ht)
+    parser_create_chart.add_argument("file", type=str, help="input csv file")
+    parser_create_chart.add_argument(
+        "-t", "--type", type=str, choices=["line", "bar", "pie"], default="bar"
+    )
+    parser_create_chart.add_argument(
+        "-s", "--stations", type=str, help="stations name with `,`"
+    )
+    parser_create_chart.add_argument(
+        "-l", "--setlevel", type=str, choices=["debug", "info", "warning", "error"]
+    )
+    parser_create_chart.set_defaults(func=create_chart)
 
     return parser
