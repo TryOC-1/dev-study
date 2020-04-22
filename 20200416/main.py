@@ -1,8 +1,5 @@
-import logging
-
-from utils import set_logger
 from cli import get_parser
-
+from utils import set_logger
 
 if __name__ == "__main__":
     set_logger()
