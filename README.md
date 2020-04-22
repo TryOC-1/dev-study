@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/zeroam/airflow-study.svg?branch=master)](https://travis-ci.com/zeroam/airflow-study)
 # Airflow Study
 
 ## Description
