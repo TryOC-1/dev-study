@@ -1,6 +1,20 @@
 [![Build Status](https://travis-ci.com/zeroam/airflow-study.svg?branch=master)](https://travis-ci.com/zeroam/airflow-study)
 # Airflow Study
 
+## Installation
+- 가상환경 세팅
+```python
+python -m venv venv
+```
+- 파이썬 패키지 설치
+```python
+pip install -r requirements.txt
+```
+- pre-commit 설치
+```bash
+pre-commit install
+```
+
 ## Description
 - Airflow 초기 버전에 대한 분석부터 시작 (1.x.x)
 - fork로 자신의 repository 생성 및 커밋 관리
