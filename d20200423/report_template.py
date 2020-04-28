@@ -1,11 +1,21 @@
-import os
-import sys
-import pandas as pd
-import matplotlib.pyplot as plt
-import datetime
 import argparse
+import datetime
+import sys
+
+import matplotlib.pyplot as plt
+import pandas as pd
 from jinja2 import Template
 from matplotlib import rc
+
+
+class DayOfWeek:
+    mon = 0
+    tue = 1
+    wed = 2
+    thur = 3
+    fri = 4
+    sat = 5
+    sun = 6
 
 
 def set_matplotlib() -> None:
@@ -16,29 +26,15 @@ def set_matplotlib() -> None:
 
     plt.rcParams["axes.unicode_minus"] = False
 
-parser = argparse.ArgumentParser()
-parser.add_argument("file", type=str, help="input .csv file")
-args = parser.parse_args()
 
-# check file
-if not args.file.endswith(".csv"):
-    parser.error("only .csv file supported")
-set_matplotlib()
+def weekday_region(df: pd.DataFrame, region: str, dayweek: str) -> int:
+    covid19 = df[(df["type"] == region) & (df["date"].dt.dayofweek == dayweek)]["cnt"]
+    return covid19.sum()
 
-with open("template.md") as f:
-    data = f.read()
 
-covid = pd.read_csv("covid-19.csv")
-covid["date"] = pd.to_datetime((covid["year"]*10000+covid["month"]*100+covid["day"]).apply(str), format="%Y%m%d") 
-tm = Template(data)
-td = datetime.datetime.now()
-
-def weekday_region(region, dayweek):
-    covid19 = covid[(covid['type']==region) & (covid["date"].dt.dayofweek == dayweek)]['cnt']
-    return covid19.sum() 
-
-def _draw_chart(df: pd.DataFrame):
-    df.pivot_table(values="cnt",index="day", columns="type", aggfunc="sum").plot(
+def save_barchart(df: pd.DataFrame):
+    dff = df.copy()
+    dff.pivot_table(values="cnt", index="day", columns="type", aggfunc="sum").plot(
         kind="bar"
     )
     plt.title("covid 현황")
@@ -48,35 +44,67 @@ def _draw_chart(df: pd.DataFrame):
 
     return file_path
 
-file_path = _draw_chart(covid)
 
-args = {
-    "year" : td.year,
-    "month" : td.month,
-    "day" : td.day,
-    "total_covid" : covid[covid['type']=='합계']['cnt'].sum(),
-    "seoul_covid" : covid[covid['type']=='서울']['cnt'].sum(),
-    "start_date" : min(covid["date"]).strftime("%Y-%m-%d"),
-    "end_date" : max(covid["date"]).strftime("%Y-%m-%d"),
-    "total_mon" : weekday_region('합계',0),
-    "seoul_mon" : weekday_region('서울',0),
-    "total_tus" : weekday_region('합계',1),
-    "seoul_tus" : weekday_region('서울',1),
-    "total_wed" : weekday_region('합계',2),
-    "seoul_wed" : weekday_region('서울',2),
-    "total_thr" : weekday_region('합계',3),
-    "seoul_thr" : weekday_region('서울',3),
-    "total_fri" : weekday_region('합계',4),
-    "seoul_fri" : weekday_region('서울',4),
-    "total_sat" : weekday_region('합계',5),
-    "seoul_sat" : weekday_region('서울',5),
-    "total_sun" : weekday_region('합계',6),
-    "seoul_sun" : weekday_region('서울',6),
-    "graph" : f"![]({file_path})",
-}
+def main():
+    # setting parser
+    parser = argparse.ArgumentParser()
+    parser.add_argument("file", type=str, help="input .csv file")
+    args = parser.parse_args()
 
-msg = tm.render(**args)
+    # check file
+    if not args.file.endswith(".csv"):
+        parser.error("only .csv file supported")
 
-with open("result.md", "w") as f:
-    f.write(msg)
-    
+    # handling data
+    covid = pd.read_csv("covid-19.csv")
+    covid["date"] = pd.to_datetime(
+        (covid["year"] * 10000 + covid["month"] * 100 + covid["day"]).apply(str),
+        format="%Y%m%d",
+    )
+
+    # settig matplotlib
+    set_matplotlib()
+
+    # setting variable
+    today = datetime.datetime.now()
+    file_path = save_barchart(covid)
+    args = {
+        "year": today.year,
+        "month": today.month,
+        "day": today.day,
+        "total_covid": covid[covid["type"] == "합계"]["cnt"].sum(),
+        "seoul_covid": covid[covid["type"] == "서울"]["cnt"].sum(),
+        "start_date": min(covid["date"]).strftime("%Y-%m-%d"),
+        "end_date": max(covid["date"]).strftime("%Y-%m-%d"),
+        "total_mon": weekday_region(covid, "합계", DayOfWeek.mon),
+        "seoul_mon": weekday_region(covid, "서울", DayOfWeek.mon),
+        "total_tus": weekday_region(covid, "합계", DayOfWeek.tue),
+        "seoul_tus": weekday_region(covid, "서울", DayOfWeek.tue),
+        "total_wed": weekday_region(covid, "합계", DayOfWeek.wed),
+        "seoul_wed": weekday_region(covid, "서울", DayOfWeek.wed),
+        "total_thr": weekday_region(covid, "합계", DayOfWeek.thur),
+        "seoul_thr": weekday_region(covid, "서울", DayOfWeek.thur),
+        "total_fri": weekday_region(covid, "합계", DayOfWeek.fri),
+        "seoul_fri": weekday_region(covid, "서울", DayOfWeek.fri),
+        "total_sat": weekday_region(covid, "합계", DayOfWeek.sat),
+        "seoul_sat": weekday_region(covid, "서울", DayOfWeek.sat),
+        "total_sun": weekday_region(covid, "합계", DayOfWeek.sun),
+        "seoul_sun": weekday_region(covid, "서울", DayOfWeek.sun),
+        "graph": f"![]({file_path})",
+    }
+
+    # read template
+    with open("template.md") as f:
+        data = f.read()
+
+    # rendering template
+    tm = Template(data)
+    msg = tm.render(**args)
+
+    # write file
+    with open("result.md", "w") as f:
+        f.write(msg)
+
+
+if __name__ == "__main__":
+    main()
