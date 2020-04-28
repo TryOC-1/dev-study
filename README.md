@@ -24,3 +24,4 @@ pre-commit install
 
 ## Link
 - [Airflow 1.0.1 분석](https://www.notion.so/Airflow-1-0-1-f6efd0a5d44147709c8b6920abaae83f)
+- [파이썬으로 git client 프로그램 구현하기](https://www.notion.so/git-client-140efc2c01124ba18d91e595aa0b24aa)
