@@ -11,12 +11,36 @@ class Report:
         self.title = title
         self.subtitle = subtitle
         self.subtitle2 = subtitle2
+
     def outputDate(self):
         return self.title
+
     def subTitle(self):
         return self.subtitle
+
     def subTitle2(self):
         return self.subtitle2
+
+
+# Sub Title
+def draw_subtitle(color, size, x, y, sub):
+    pdf.setFillColor(color)
+    pdf.setFont("abc", size)
+    pdf.drawString(x, y, sub)
+
+
+# Draw a line
+def draw_line(x, y, degreeline):
+    pdf.line(x, degreeline, y, degreeline)
+
+
+# Text object
+def draw_text(x, y, size, color, list):
+    text = pdf.beginText(x, y)
+    text.setFont("abc", size)
+    text.setFillColor(color)
+    text.textLines(list)
+    pdf.drawText(text)
 
 
 textLines = [
@@ -61,9 +85,12 @@ subTitle = sub_date.render(rep=report)
 subTitle2 = sub_title.render(rep=report)
 subTitle3 = sub_title2.render(rep=report)
 
-
 pdf = canvas.Canvas(fileName)
 pdf.setTitle(documentTitle)
+
+pdfmetrics.registerFont(TTFont("abc", "gulim.ttf"))
+pdf.setFont("abc", 36)
+pdf.drawCentredString(300, 770, title)
 
 
 if __name__ == "__main__":
