@@ -1,0 +1,17 @@
+body {
+    margin: 0;
+    padding: 0;
+    color: #444;
+    background-color: #F8EFBA;
+    width: 700px;
+    height: 700px;
+  }
+
+  .message_holder {
+    font-size: 15px;
+    text-align: left;
+  }
+
+  h3 {
+    font-size: 30px;
+  }
