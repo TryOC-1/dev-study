@@ -89,6 +89,12 @@ class HashTable:
             # Found - return the data value
             return node.value
 
+    def __setitem__(self, key, value):
+        return self.insert(key, value)
+
+    def __getitem__(self, key):
+        return self.find(key)
+
     def remove(self, key: str) -> Any:
         """Remove node stored at key and return value"""
         # 1. Compute hash
