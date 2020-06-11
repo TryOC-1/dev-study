@@ -18,6 +18,6 @@ while True:
     htmlElem.send_keys(Keys.DOWN)
     htmlElem.send_keys(Keys.LEFT)
 
-    print(temp)
-    if htmlElem.find_element_by_class_name == "game-message game-over":
+    game_over = htmlElem.find_elements_by_class_name("game-over")
+    if game_over:
         break
