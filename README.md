@@ -27,4 +27,5 @@ pre-commit install
 - [파이썬으로 git client 프로그램 구현하기](https://www.notion.so/git-client-140efc2c01124ba18d91e595aa0b24aa)
 - [파이썬으로 웹 서버 구현하기](https://www.notion.so/1ab92f59b4ad4c648bd9a5c86e5291d5)
 - [WSGI 서버란?](https://www.notion.so/WSGI-8bf69377b233473b897d8e38b4720bca)
-- [파이썬 파일 체계화 하기](https://www.notion.so/2b13111014f44b0198a2984ba92ced9c)
+- [지루한 작업 자동화하기 - 파이썬 파일 체계화 하기](https://www.notion.so/2b13111014f44b0198a2984ba92ced9c)
+- [지루한 작업 자동화하기 - Webscraping](https://www.notion.so/Webscraping-9346f4b9407441c1a8bbdb09e6d15e26)
