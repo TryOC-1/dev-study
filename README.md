@@ -29,3 +29,4 @@ pre-commit install
 - [WSGI 서버란?](https://www.notion.so/WSGI-8bf69377b233473b897d8e38b4720bca)
 - [지루한 작업 자동화하기 - 파이썬 파일 체계화 하기](https://www.notion.so/2b13111014f44b0198a2984ba92ced9c)
 - [지루한 작업 자동화하기 - Webscraping](https://www.notion.so/Webscraping-9346f4b9407441c1a8bbdb09e6d15e26)
+- [지루한 작업 자동화하기 - 엑셀문서 다루기](https://www.notion.so/44b1ac56d422449aa32719fbef8007af)
