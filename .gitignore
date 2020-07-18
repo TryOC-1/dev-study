@@ -1,8 +1,7 @@
 __pycache__
-
 log
 venv
-
+.env
 .vscode
 .python-version
 .DS_Store
