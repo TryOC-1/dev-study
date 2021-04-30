@@ -70,7 +70,7 @@ pyzmail36==1.0.4
 regex==2020.4.4
 requests==2.24.0
 rope==0.17.0
-rsa==4.6
+rsa==4.7
 six==1.14.0
 soupsieve==2.0.1
 sqlparse==0.3.1
